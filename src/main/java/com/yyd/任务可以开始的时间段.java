@@ -19,7 +19,7 @@ public class 任务可以开始的时间段 {
 
     private int endSecond;
 
-    private int 该时间段已经执行过几次;
+    private volatile int 该时间段已经执行过几次;
 
     /**
      * 小于0表示无数次

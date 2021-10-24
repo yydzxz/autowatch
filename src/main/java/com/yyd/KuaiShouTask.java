@@ -8,6 +8,7 @@ import static com.yyd.KuaiShouOperate.单击点赞;
 
 public class KuaiShouTask {
     public static int 当前正在运行的userId = 999;
+
     static Random random = new Random();
 
     /**
@@ -37,7 +38,7 @@ public class KuaiShouTask {
     }
 
     public static void 任务中心签到() throws IOException, InterruptedException {
-        KuaiShouOperate.退出快手极速版(当前正在运行的userId);
+        CommonOperate.退出所有App();
         KuaiShouOperate.打开快手极速版(当前正在运行的userId);
         KuaiShouOperate.进入任务中心();
         CommonOperate.单击(861, 965, 30, 15, 1500, "签到领取奖励");
@@ -51,7 +52,7 @@ public class KuaiShouTask {
 
 
     public static void 任务中心最高5000金币悬赏() throws IOException, InterruptedException {
-        KuaiShouOperate.退出快手极速版(当前正在运行的userId);
+        CommonOperate.退出所有App();
         KuaiShouOperate.打开快手极速版(当前正在运行的userId);
         KuaiShouOperate.进入任务中心();
 
@@ -68,7 +69,7 @@ public class KuaiShouTask {
     }
 
     public static void 任务中心逛街领1000金币() throws IOException, InterruptedException {
-        KuaiShouOperate.退出快手极速版(当前正在运行的userId);
+        CommonOperate.退出所有App();
         KuaiShouOperate.打开快手极速版(当前正在运行的userId);
         KuaiShouOperate.进入任务中心();
         CommonOperate.上划或者下划(6000, 8, 800, 1900, 300, true );
@@ -76,10 +77,10 @@ public class KuaiShouTask {
         CommonOperate.单击(200, 1365, 400, 30, 1500, "逛街领1000金币");
         TimeUnit.SECONDS.sleep(2);
 
-        for(int i = 0; i < 30; i++){
-            CommonOperate.上划或者下划(6000, 40, 800, 1900, 300, true );
+        for(int i = 0; i < 60; i++){
+            CommonOperate.上划或者下划(6000, 15, 800, 1900, 300, true );
         }
-        KuaiShouOperate.退出快手极速版(当前正在运行的userId);
+        CommonOperate.退出所有App();
     }
 
     public static void 自动刷视频() throws IOException, InterruptedException {
@@ -111,7 +112,7 @@ public class KuaiShouTask {
                 }
             }
             if(count % 60 == 0){
-                KuaiShouOperate.退出快手极速版(当前正在运行的userId);
+                CommonOperate.退出所有App();
                 TimeUnit.SECONDS.sleep(60);
                 KuaiShouOperate.打开快手极速版(当前正在运行的userId);
             }

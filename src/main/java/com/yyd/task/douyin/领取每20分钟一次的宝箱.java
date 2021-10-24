@@ -10,7 +10,7 @@ import com.yyd.任务可以开始的时间段;
 import java.io.IOException;
 import java.time.LocalDateTime;
 
-@TaskAnnotation(cron = "", 优先级 = App.高优先级)
+@TaskAnnotation(cron = "", 优先级 = App.高优先级, 所属app = App.DOU_YIN)
 public class 领取每20分钟一次的宝箱 extends ITask {
     private String 任务宝箱位置 = "右";
 

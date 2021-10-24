@@ -1,5 +1,8 @@
 package com.yyd;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import java.io.IOException;
 import java.util.Random;
 import java.util.concurrent.TimeUnit;
@@ -9,6 +12,8 @@ import java.util.concurrent.TimeUnit;
  * 抖音操作
  */
 public class DouYinOperate {
+    static Logger log = LoggerFactory.getLogger(DouYinOperate.class);
+
     static Random random = new Random();
 
     public static void 评论区操作() throws InterruptedException, IOException {
@@ -53,10 +58,10 @@ public class DouYinOperate {
         String commandStr;
         if(左划){
             commandStr = "adb shell input swipe " + start[0] + " " + start[1] + " " + end[0] + " " + end[1];
-            System.out.printf("左划, 从 %s, %s 滑动到 %s, %s%n",start[0], start[1], end[0], end[1]);
+            log.info("左划, 从 {}, {} 滑动到 {}, {}",start[0], start[1], end[0], end[1]);
         }else {
             commandStr = "adb shell input swipe " + end[0] + " " + end[1] + " " + start[0] + " " + start[1];
-            System.out.printf("右划, 从 %s, %s 滑动到 %s, %s%n",end[0], end[1], start[0], start[1]);
+            log.info("右划, 从 {}, {} 滑动到 {}, {}",end[0], end[1], start[0], start[1]);
         }
         Runtime.getRuntime().exec(commandStr);
         TimeUnit.SECONDS.sleep(划动后最少停止时间 + random.nextInt(offset));

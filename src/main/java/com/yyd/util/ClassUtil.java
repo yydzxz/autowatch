@@ -24,7 +24,7 @@ public class ClassUtil {
                 if(url.getProtocol().equals("file")) {
                     List<File> classes = new ArrayList<File>();
                     // 递归 变量路径下面所有的 class文件
-                    listFiles(new File(url.getFile()), classes);
+                    FileUtil.listFiles(new File(url.getFile()), classes);
                     // 加载我们所有的 class文件 就行了
                     result= loadClasses(classes, packageName);
                 }else if(url.getProtocol().equals("jar")) {
@@ -58,16 +58,5 @@ public class ClassUtil {
 
     }
 
-    /** * 查找所有的文件 * * @param dir 路径 * @param fileList 文件集合 */
-    private static void listFiles(File dir, List<File> fileList) {
-        if (dir.isDirectory()) {
-            for (File f : dir.listFiles()) {
-                listFiles(f, fileList);
-            }
-        } else {
-            if(dir.getName().endsWith(".class")) {
-                fileList.add(dir);
-            }
-        }
-    }
+
 }

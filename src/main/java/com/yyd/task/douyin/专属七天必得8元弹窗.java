@@ -6,20 +6,25 @@ import com.yyd.DouYinOperate;
 import com.yyd.annotations.TaskAnnotation;
 import com.yyd.task.ITask;
 
+import java.io.IOException;
+import java.util.concurrent.TimeUnit;
+
 @TaskAnnotation(cron = "", 优先级 = App.高优先级, 所属app = App.DOU_YIN)
-public class 看小说任务 extends ITask {
-    public 看小说任务(int 当前正在运行的userId) {
+public class 专属七天必得8元弹窗 extends ITask {
+    public 专属七天必得8元弹窗(int 当前正在运行的userId) {
         super(当前正在运行的userId);
+        set顺序(-1);
     }
 
     @Override
     public boolean 任务满足开始条件() {
-        return true;
+        //这个任务有设备绑定，不能双开领取，所以还是自己手动领取好了，这个任务暂时就不让执行了。后面考虑是否删除掉这个类
+        return false;
     }
 
     @Override
     public long 这个任务每次执行的最长时间() {
-        return 30 * 60 * 1000;
+        return -1;
     }
 
     @Override
@@ -30,20 +35,17 @@ public class 看小说任务 extends ITask {
     @Override
     public void run() {
         try {
-            DouYinOperate.退出抖音极速版(当前正在运行的userId);
+            CommonOperate.退出所有App();
             DouYinOperate.打开抖音极速版(当前正在运行的userId);
             DouYinOperate.点击视频页最底下中间那个按钮打开任务页();
-            DouYinOperate.赚钱任务页面划动到最底部();
-            CommonOperate.单击(899, 1259, 2, 2, 5000, "点击看小说");
-            CommonOperate.单击(135.2, 700.5, 400, 100, 5000, "点击书架上的小说");
-            while (!这个任务这次是否已经执行了足够时间()){
-                DouYinOperate.左划(6, 6);
-            }
-            DouYinOperate.退出抖音极速版(当前正在运行的userId);
-        }catch (Exception e){
+            TimeUnit.SECONDS.sleep(5);
+            CommonOperate.单击(438, 1250, 100, 10, 5000, "领取");
+            CommonOperate.返回(2);
+        } catch (IOException | InterruptedException e) {
             e.printStackTrace();
         }finally {
             CommonOperate.退出所有App();
         }
+
     }
 }

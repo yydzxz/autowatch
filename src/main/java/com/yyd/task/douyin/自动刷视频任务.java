@@ -5,15 +5,18 @@ import com.yyd.CommonOperate;
 import com.yyd.DouYinOperate;
 import com.yyd.annotations.TaskAnnotation;
 import com.yyd.task.ITask;
-import com.yyd.util.LogUtil;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.io.IOException;
 import java.util.Random;
 
 import static com.yyd.DouYinOperate.单击点赞;
 
-@TaskAnnotation(cron = "", 优先级 = App.低优先级)
+@TaskAnnotation(cron = "", 优先级 = App.低优先级, 所属app = App.DOU_YIN)
 public class 自动刷视频任务 extends ITask {
+
+    static Logger log = LoggerFactory.getLogger(自动刷视频任务.class);
 
     volatile boolean 自动刷视频任务是否应该停止;
 
@@ -76,9 +79,9 @@ public class 自动刷视频任务 extends ITask {
                 if(是否点赞){
                     单击点赞(988, 1035);
                 }
-                System.out.println("已经观看了" + ++count + "个视频");
+                log.info("已经观看了" + ++count + "个视频");
                 if(这个任务这次是否已经执行了足够时间()){
-                    LogUtil.log("已经执行了足够时间:" + this.这个任务每次执行的最长时间);
+                    log.info("已经执行了足够时间:" + this.这个任务每次执行的最长时间);
                     break;
                 }
             }

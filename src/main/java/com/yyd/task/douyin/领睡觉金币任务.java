@@ -4,7 +4,7 @@ import com.yyd.*;
 import com.yyd.annotations.TaskAnnotation;
 import com.yyd.task.ITask;
 
-@TaskAnnotation(cron = "", 优先级 = App.高优先级)
+@TaskAnnotation(cron = "", 优先级 = App.高优先级, 所属app = App.DOU_YIN)
 public class 领睡觉金币任务 extends ITask {
 
     public 领睡觉金币任务(int 当前正在运行的userId) {

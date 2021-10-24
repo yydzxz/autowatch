@@ -12,4 +12,6 @@ public @interface TaskAnnotation {
     String cron();
 
     int 优先级() default 0;
+
+    String 所属app();
 }

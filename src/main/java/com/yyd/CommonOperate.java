@@ -1,10 +1,14 @@
 package com.yyd;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import java.io.IOException;
 import java.util.Random;
 import java.util.concurrent.TimeUnit;
 
 public class CommonOperate {
+    static Logger log = LoggerFactory.getLogger(CommonOperate.class);
 
     static Random random = new Random();
     static double 屏幕y轴最小可用坐标 = 400;
@@ -47,34 +51,33 @@ public class CommonOperate {
         }
         //初始化x坐标
         for (int i = 0; i < 总共的坐标点数量; i++){
-            坐标数组[i][0] = 150 + random.nextDouble() * 600;
+            坐标数组[i][0] = 350 + random.nextDouble() * 60;
         }
         double 实际总共划动距离 = 0;
         //开始划动
         for (int i = 0; i < 总共的坐标点数量; i++){
             String commandStr;
-            //TODO 左右划动也可以用这个方法，坐标点交换一下就行
             if(上划){
                 commandStr = "adb shell input swipe " + 坐标数组[i][0] + " " + 坐标数组[i][1] + " " + 坐标数组[i+1][0] + " " + 坐标数组[i+1][1] + " " + 每次划动耗时单位毫秒;
                 Runtime.getRuntime().exec(commandStr);
-                System.out.println(String.format("上划, 从 %s, %s 滑动到 %s, %s",坐标数组[i][0], 坐标数组[i][1], 坐标数组[i+1][0], 坐标数组[i+1][1]));
+                log.info("上划, 从 {}, {} 滑动到 {}, {}",坐标数组[i][0], 坐标数组[i][1], 坐标数组[i+1][0], 坐标数组[i+1][1]);
             }else {
                 commandStr = "adb shell input swipe " + 坐标数组[i+1][0] + " " + 坐标数组[i+1][1] + " " + 坐标数组[i][0] + " " + 坐标数组[i][1] + " " + 每次划动耗时单位毫秒;
                 Runtime.getRuntime().exec(commandStr);
-                System.out.println(String.format("下划, 从 %s, %s 滑动到 %s, %s",坐标数组[i+1][0], 坐标数组[i+1][1], 坐标数组[i][0], 坐标数组[i][1]));
+                log.info("下划, 从 {}, {} 滑动到 {}, {}",坐标数组[i+1][0], 坐标数组[i+1][1], 坐标数组[i][0], 坐标数组[i][1]);
             }
             double 本次划动距离 = Math.abs(坐标数组[i][1] - 坐标数组[i+1][1]);
-            System.out.println("本次划动距离: " + 本次划动距离);
+            log.info("本次划动距离: " + 本次划动距离);
             实际总共划动距离 += 本次划动距离;
             TimeUnit.MILLISECONDS.sleep(划动后最少停止时间毫秒 + random.nextInt(offset));
             i++;
         }
-        System.out.println("实际总共划动距离：" + 实际总共划动距离);
+        log.info("实际总共划动距离：" + 实际总共划动距离);
     }
     public static void 划动(double x1, double y1, double x2, double y2, long 划动时间单位毫秒) throws IOException {
         String commandStr = "adb shell input swipe " + x1 + " " + y1 + " " + x2 + " " + y2 + " " + 划动时间单位毫秒;
         Runtime.getRuntime().exec(commandStr);
-        System.out.println(String.format("下划, 从 %s, %s 滑动到 %s, %s",x1, y1, x2, y2));
+        log.info("下划, 从 {}, {} 滑动到 {}, {}",x1, y1, x2, y2);
     }
 
     @Deprecated
@@ -88,11 +91,11 @@ public class CommonOperate {
         String commandStr;
         if(上划){
             commandStr = "adb shell input swipe " + start[0] + " " + start[1] + " " + end[0] + " " + end[1];
-            System.out.println(String.format("上划, 从 %s, %s 滑动到 %s, %s",start[0], start[1], end[0], end[1]));
+            log.info(String.format("上划, 从 %s, %s 滑动到 %s, %s",start[0], start[1], end[0], end[1]));
 
         }else {
             commandStr = "adb shell input swipe " + end[0] + " " + end[1] + " " + start[0] + " " + start[1];
-            System.out.println(String.format("下划, 从 %s, %s 滑动到 %s, %s",end[0], end[1], start[0], start[1]));
+            log.info(String.format("下划, 从 %s, %s 滑动到 %s, %s",end[0], end[1], start[0], start[1]));
         }
         Runtime.getRuntime().exec(commandStr);
         TimeUnit.SECONDS.sleep(划动后最少停止时间 + random.nextInt(offset));
@@ -103,7 +106,7 @@ public class CommonOperate {
     }
 
     public static void 单击(double x, double y, int x最大偏移, int y最大偏移, long 点击后休眠多久单位毫秒, String 动作名字) throws IOException, InterruptedException {
-        System.out.println(动作名字);
+        log.info(动作名字);
         double[] 点赞坐标 = new double[2];
         点赞坐标[0] = x + random.nextDouble() * x最大偏移;
         点赞坐标[1] = y + random.nextDouble() * y最大偏移;
@@ -112,15 +115,15 @@ public class CommonOperate {
     }
 
     public static void 返回(int 返回后停留时间单位秒) throws IOException, InterruptedException {
-        System.out.println("返回");
+        log.info("返回");
         Runtime.getRuntime().exec("adb shell input keyevent 4");
         TimeUnit.SECONDS.sleep(返回后停留时间单位秒);
     }
 
     public static void 退出所有App(){
-        DouYinOperate.退出抖音极速版(0);
-        DouYinOperate.退出抖音极速版(999);
-        KuaiShouOperate.退出快手极速版(0);
-        KuaiShouOperate.退出快手极速版(999);
+        for(int 用户id : App.用户id列表){
+            DouYinOperate.退出抖音极速版(用户id);
+            KuaiShouOperate.退出快手极速版(用户id);
+        }
     }
 }

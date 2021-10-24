@@ -3,15 +3,24 @@ package com.yyd;
 import com.yyd.annotations.TaskAnnotation;
 import com.yyd.task.ITask;
 import com.yyd.util.ClassUtil;
-import com.yyd.util.LogUtil;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.List;
+import java.util.Scanner;
 import java.util.concurrent.TimeUnit;
 
 public class App {
+    static Logger log = LoggerFactory.getLogger(App.class);
+
+    public static final String DOU_YIN = "douyin";
+    public static final String KUAI_SHOU = "kuaishou";
+
+
     public static final int 低优先级 = 0;
     public static final int 高优先级 = 1;
     public static List<ITask> 低优先级队列 = new ArrayList<>();
@@ -35,7 +44,7 @@ public class App {
      */
     public static void init() {
         try {
-            List<Class<?>> classList = ClassUtil.listClass("com.yyd");
+            List<Class<?>> classList = ClassUtil.listClass("com.yyd.task");
             for (Class<?> clazz : classList){
                 TaskAnnotation taskAnnotation = clazz.getAnnotation(TaskAnnotation.class);
                 if(taskAnnotation != null){
@@ -43,14 +52,16 @@ public class App {
                         ITask task = (ITask)clazz.getConstructor(int.class).newInstance(用户id);
                         if(taskAnnotation.优先级() == 低优先级){
                             低优先级队列.add(task);
-                            LogUtil.log("底优先级队列任务:" + task.get任务名());
+                            log.info("低优先级队列任务:" + task.get任务名());
                         }else {
                             高优先级队列.add(task);
-                            LogUtil.log("高优先级队列任务:" + task.get任务名());
+                            log.info("高优先级队列任务:" + task.get任务名());
                         }
                     }
                 }
             }
+            低优先级队列.sort(Comparator.comparingInt(ITask::get顺序));
+            高优先级队列.sort(Comparator.comparingInt(ITask::get顺序));
         }catch (Exception e){
             throw new RuntimeException(e);
         }
@@ -61,21 +72,15 @@ public class App {
             LocalDate 用于判定是否到了第二天的开始时间 = LocalDate.now();
             while (true){
                 boolean 到了第二天 = LocalDate.now().compareTo(用于判定是否到了第二天的开始时间) > 0;
-                用于判定是否到了第二天的开始时间 = LocalDate.now();
                 if(到了第二天){
+                    用于判定是否到了第二天的开始时间 = LocalDate.now();
                     for (ITask task : 高优先级队列){
-                        List<任务可以开始的时间段> 任务可执行时间段列表 = task.任务只在这几个时间段执行();
-                        for (任务可以开始的时间段 任务可以开始的时间段 : 任务可执行时间段列表){
-                            任务可以开始的时间段.执行次数清零();
-                        }
+                        task.第二天初始化();
                     }
                     for (ITask task : 低优先级队列){
-                        List<任务可以开始的时间段> 任务可执行时间段列表 = task.任务只在这几个时间段执行();
-                        for (任务可以开始的时间段 任务可以开始的时间段 : 任务可执行时间段列表){
-                            任务可以开始的时间段.执行次数清零();
-                        }
+                        task.第二天初始化();
                     }
-                    LogUtil.log("第二天到了，任务已经执行次数清零");
+                    log.info("第二天到了，任务已经执行次数清零");
                 }
                 try {
                     TimeUnit.MINUTES.sleep(30);
@@ -108,23 +113,65 @@ public class App {
             }
         }
         if(这次的任务可以开始的时间段 != null && (这次的任务可以开始的时间段.get该时间段最多可以执行几次() < 0 || 这次的任务可以开始的时间段.get该时间段已经执行过几次() < 这次的任务可以开始的时间段.get该时间段最多可以执行几次())){
-            if(task.任务满足开始条件()){
-                当前正在执行的任务 = task;
-                当前任务的开始时间 = System.currentTimeMillis();
-                LogUtil.log("现在任务【" + task.get任务名() + "】满足开始条件，并且处于可开始时间段： " +这次的任务可以开始的时间段.当前时间段字符串());
-                try {
-                    task.doRun();
-                }catch (Exception e){
-                    LogUtil.log(e.getMessage());
-                    e.printStackTrace();
-                }finally {
-                    CommonOperate.退出所有App();
+            if(!task.任务满足开始条件()){
+                log.info("现在任务【" + task.get任务名() + "】处于可开始时间段： " +这次的任务可以开始的时间段.当前时间段字符串() + ", 但是不满足开始条件");
+                return;
+            }
+            if(!task.is今天这个任务是否执行()){
+                log.info("现在任务【" + task.get任务名() + "】处于可开始时间段： " +这次的任务可以开始的时间段.当前时间段字符串() + ", 但是今天不执行");
+                return;
+
+            }
+            当前正在执行的任务 = task;
+            当前任务的开始时间 = System.currentTimeMillis();
+            log.info("现在任务【" + task.get任务名() + "】满足开始条件，并且处于可开始时间段： " +这次的任务可以开始的时间段.当前时间段字符串());
+            task.doRun();
+            这次的任务可以开始的时间段.当前时间段执行次数加1();
+            执行队列中上一个任务的结束时间 = LocalDateTime.now();
+        }
+    }
+
+    public static class 命令输入处理任务 implements Runnable{
+        @Override
+        public void run() {
+            String command = "";
+            while (true){
+                Scanner scanner = new Scanner(System.in);
+                if(scanner.hasNextLine()){
+                    try {
+                        command = scanner.nextLine().trim();
+                        log.info("收到命令:" + command);
+                        if(command.startsWith("今天不执行")){
+                            String 任务名 = command.split(" ")[1];
+                            String 用户id = command.split(" ")[2];
+                            ITask task = 根据用户id和任务名查找任务(任务名, 用户id);
+                            task.set今天这个任务是否执行(false);
+                        }
+                    }catch (Exception e){
+                        e.printStackTrace();
+                    }
                 }
-                这次的任务可以开始的时间段.当前时间段执行次数加1();
-                执行队列中上一个任务的结束时间 = LocalDateTime.now();
-            }else {
-                LogUtil.log("现在任务【" + task.get任务名() + "】处于可开始时间段： " +这次的任务可以开始的时间段.当前时间段字符串() + ", 但是不满足开始条件");
             }
         }
+    }
+
+    public static ITask 根据用户id和任务名查找任务(String 任务名, String 用户id){
+        ITask 找到的任务 = null;
+        for (ITask task : 低优先级队列){
+            if(task.get任务名().equals(任务名 + "-" + 用户id)){
+                找到的任务 = task;
+            }
+        }
+        for (ITask task : 高优先级队列){
+            if(task.get任务名().equals(任务名 + "-" + 用户id)){
+                找到的任务 = task;
+            }
+        }
+        return 找到的任务;
+    }
+
+
+    public static void a(){
+        //TODO 读取 今天执行的任务
     }
 }
