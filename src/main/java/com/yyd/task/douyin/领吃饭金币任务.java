@@ -1,10 +1,15 @@
-package com.yyd.douyin;
+package com.yyd.task.douyin;
 
 import com.yyd.*;
 import com.yyd.annotations.TaskAnnotation;
+import com.yyd.task.ITask;
 
 @TaskAnnotation(cron = "", 优先级 = App.高优先级)
-public class 领睡觉金币任务 extends ITask{
+public class 领吃饭金币任务 extends ITask {
+
+    public 领吃饭金币任务(int 当前正在运行的userId) {
+        super(当前正在运行的userId);
+    }
 
     @Override
     public boolean 任务满足开始条件() {
@@ -28,15 +33,19 @@ public class 领睡觉金币任务 extends ITask{
     public void run() {
         try {
             CommonOperate.退出所有App();
-            DouYinOperate.打开抖音极速版(DouYinTask.当前正在运行的userId);
+            DouYinOperate.打开抖音极速版(当前正在运行的userId);
             DouYinOperate.点击视频页最底下中间那个按钮打开任务页();
             DouYinOperate.赚钱任务页面划动到最底部();
-            CommonOperate.单击(835, 650, 20, 5, 2500,"点击睡觉赚金币");
-            CommonOperate.单击(400, 1760, 20, 10, 2500,"点击我睡觉了");
+            CommonOperate.单击(400, 1022, 300, 20, 3500,"点击吃饭补贴");
+            CommonOperate.单击(500, 1670, 200, 20, 3500,"领取夜宵补贴");
+            CommonOperate.单击(443, 1212, 200, 20, 35000,"看视频再领金币");
+            CommonOperate.返回(2);
+            CommonOperate.返回(2);
+            DouYinOperate.退出抖音极速版(当前正在运行的userId);
         }catch (Exception e){
-            throw new RuntimeException(e);
+            e.printStackTrace();
         }finally {
-            DouYinOperate.退出抖音极速版(DouYinTask.当前正在运行的userId);
+            CommonOperate.退出所有App();
         }
     }
 }

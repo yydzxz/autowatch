@@ -7,6 +7,11 @@ import java.util.Enumeration;
 import java.util.List;
 
 public class ClassUtil {
+    /**
+     * 遍历获取包下的所有类
+     * @param packageName
+     * @return
+     */
     public static List<Class<?>> listClass(String packageName) {
         try {
             // 结果 class

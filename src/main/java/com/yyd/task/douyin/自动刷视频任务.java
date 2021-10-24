@@ -1,9 +1,10 @@
-package com.yyd.douyin;
+package com.yyd.task.douyin;
 
 import com.yyd.App;
 import com.yyd.CommonOperate;
 import com.yyd.DouYinOperate;
 import com.yyd.annotations.TaskAnnotation;
+import com.yyd.task.ITask;
 import com.yyd.util.LogUtil;
 
 import java.io.IOException;
@@ -12,7 +13,7 @@ import java.util.Random;
 import static com.yyd.DouYinOperate.单击点赞;
 
 @TaskAnnotation(cron = "", 优先级 = App.低优先级)
-public class 自动刷视频任务 extends ITask{
+public class 自动刷视频任务 extends ITask {
 
     volatile boolean 自动刷视频任务是否应该停止;
 
@@ -28,12 +29,14 @@ public class 自动刷视频任务 extends ITask{
 
     Random random = new Random();
 
-    public 自动刷视频任务() {
-        自动刷视频任务是否应该停止 = false;
-        强制领取宝藏金币 = false;
-        任务宝箱位置 = "右";
-        打开评论的概率 = 25;
-        点赞的概率 = 0;
+    public 自动刷视频任务(int 当前正在运行的userId) {
+        super(当前正在运行的userId);
+        this.当前正在运行的userId = 当前正在运行的userId;
+        this.自动刷视频任务是否应该停止 = false;
+        this.强制领取宝藏金币 = false;
+        this.任务宝箱位置 = "右";
+        this.打开评论的概率 = 25;
+        this.点赞的概率 = 0;
     }
 
     @Override

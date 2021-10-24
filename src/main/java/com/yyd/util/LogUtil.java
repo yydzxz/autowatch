@@ -7,6 +7,5 @@ public class LogUtil {
 
     public static void log(String info){
         System.out.println(LocalDateTime.now().format(DateTimeFormatter.ISO_LOCAL_DATE_TIME) + ": " + info);
-
     }
 }
