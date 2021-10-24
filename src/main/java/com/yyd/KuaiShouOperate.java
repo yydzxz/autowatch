@@ -9,6 +9,7 @@ public class KuaiShouOperate {
     static Random random = new Random();
 
     public static void 打开快手极速版(int userId) throws IOException, InterruptedException {
+        System.out.println("打开快手 userId: " + userId);
         Runtime.getRuntime().exec("adb shell am start --user " + userId +  " com.kuaishou.nebula/com.yxcorp.gifshow.HomeActivity");
         TimeUnit.SECONDS.sleep(12);
         TimeUnit.SECONDS.sleep(20);
@@ -38,6 +39,14 @@ public class KuaiShouOperate {
         任务中心入口坐标[1] = 423 + random.nextDouble() * 6;
         Runtime.getRuntime().exec("adb shell input tap " + 任务中心入口坐标[0] + " " + 任务中心入口坐标[1]);
         TimeUnit.SECONDS.sleep(25);
+    }
+
+    public static void 领取任务页宝箱金币() throws IOException, InterruptedException {
+        进入任务中心();
+        CommonOperate.单击(881, 1750, 10, 10, 5000, "点击宝箱");
+        CommonOperate.单击(470, 1193, 200, 10, 35000, "看精彩视频赚更多");
+        CommonOperate.返回(2);
+        CommonOperate.返回(2);
     }
 
     public static void 单击点赞(double 点赞x, double 点赞y) throws IOException, InterruptedException {

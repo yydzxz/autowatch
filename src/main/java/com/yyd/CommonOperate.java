@@ -12,7 +12,7 @@ public class CommonOperate {
     static double 上下划动的最长距离 = 屏幕y轴最大可用坐标 - 屏幕y轴最小可用坐标;
     static double 上下划动的最短距离 = 100;
 
-    public static void 上划或者下划(int 总共要划动的距离, int 分几次划动完成, int 每次划动耗时单位毫秒, int 划动后最少停止时间, int offset, boolean 上划) throws IOException, InterruptedException {
+    public static void 上划或者下划(int 总共要划动的距离, int 分几次划动完成, int 每次划动耗时单位毫秒, int 划动后最少停止时间毫秒, int offset, boolean 上划) throws IOException, InterruptedException {
         double 平均每次移动距离 = 总共要划动的距离/分几次划动完成;
         if(平均每次移动距离 > 上下划动的最长距离){
             throw new RuntimeException("平均划动距离超过:" + 上下划动的最长距离 + "，可能会失败，所以请多分几次完成划动动作");
@@ -27,7 +27,6 @@ public class CommonOperate {
             前n减1次划动距离最大为 = (总共要划动的距离 - 上下划动的最短距离)/(分几次划动完成 - 1);
             前n减1次划动距离最小为 = (总共要划动的距离 - 上下划动的最长距离)/(分几次划动完成 - 1);
         }
-
         //每次需要2个坐标点，每个坐标点有x,y两个坐标
         int 总共的坐标点数量 = 分几次划动完成 * 2;
         double[][] 坐标数组 = new double[总共的坐标点数量][2];
@@ -48,7 +47,7 @@ public class CommonOperate {
         }
         //初始化x坐标
         for (int i = 0; i < 总共的坐标点数量; i++){
-            坐标数组[i][0] = 100 + random.nextDouble() * 30;
+            坐标数组[i][0] = 150 + random.nextDouble() * 600;
         }
         double 实际总共划动距离 = 0;
         //开始划动
@@ -67,7 +66,7 @@ public class CommonOperate {
             double 本次划动距离 = Math.abs(坐标数组[i][1] - 坐标数组[i+1][1]);
             System.out.println("本次划动距离: " + 本次划动距离);
             实际总共划动距离 += 本次划动距离;
-            TimeUnit.MILLISECONDS.sleep(划动后最少停止时间 + random.nextInt(offset));
+            TimeUnit.MILLISECONDS.sleep(划动后最少停止时间毫秒 + random.nextInt(offset));
             i++;
         }
         System.out.println("实际总共划动距离：" + 实际总共划动距离);

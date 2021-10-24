@@ -15,6 +15,12 @@ public class KuaiShouTask {
      */
     static volatile int 打开评论的概率;
     static volatile int 点赞的概率;
+
+    static Long 上一次领取最底下中间宝藏的时间;
+
+    //启动程序时，发现最底下中间那个宝藏已经有金币可以领取的话，这里就设置为true. 默认应该为false
+    static volatile boolean 强制领取宝藏金币 = false;
+
     static {
         每天初始化();
     }
@@ -25,9 +31,9 @@ public class KuaiShouTask {
 
     public static void main(String[] args) throws IOException, InterruptedException {
 //        任务中心签到();
-        任务中心最高5000金币悬赏();
-        任务中心逛街领1000金币();
-//        自动刷视频();
+//        任务中心最高5000金币悬赏();
+//        任务中心逛街领1000金币();
+        自动刷视频();
     }
 
     public static void 任务中心签到() throws IOException, InterruptedException {
@@ -78,13 +84,31 @@ public class KuaiShouTask {
 
     public static void 自动刷视频() throws IOException, InterruptedException {
         int count = 1;
+        // 目前宝箱刷新时间好像是20分钟
+        long 宝箱刷新时间 = 22 * 60 * 1000;
+
+        long 每一轮刷视频的开始时间 = System.currentTimeMillis();
         CommonOperate.退出所有App();
         KuaiShouOperate.打开快手极速版(当前正在运行的userId);
         while(true){
-//            CommonOperate.上划或者下划(15, 5, true);
-            CommonOperate.上划或者下划(800, 1, 800, 1000, 20, true);
-            if(random.nextInt(100) < 点赞的概率){
+            CommonOperate.上划或者下划(15, 5, true);
+//            CommonOperate.上划或者下划(800 + random.nextInt(170), 1, 700, 10000, 15000, true);
+            boolean 是否点赞 = random.nextInt(100) < 点赞的概率;
+            if(是否点赞){
                 单击点赞(962.1, 1118.3);
+            }
+            if(上一次领取最底下中间宝藏的时间 == null){
+                if(System.currentTimeMillis() - 每一轮刷视频的开始时间 > 宝箱刷新时间 || 强制领取宝藏金币){
+                    KuaiShouOperate.领取任务页宝箱金币();
+                    上一次领取最底下中间宝藏的时间 = System.currentTimeMillis();
+                    强制领取宝藏金币 = false;
+                }
+            }else {
+                if(System.currentTimeMillis() - 上一次领取最底下中间宝藏的时间 > 宝箱刷新时间 || 强制领取宝藏金币){
+                    KuaiShouOperate.领取任务页宝箱金币();
+                    上一次领取最底下中间宝藏的时间 = System.currentTimeMillis();
+                    强制领取宝藏金币 = false;
+                }
             }
             if(count % 60 == 0){
                 KuaiShouOperate.退出快手极速版(当前正在运行的userId);

@@ -28,30 +28,9 @@ public class DouYinOperate {
     }
 
     public static void 点击视频页最底下中间那个按钮打开任务页() throws InterruptedException, IOException {
-        CommonOperate.单击(506.1, 1842, 3, 2, 1100, "点击视频页最底下中间那个按钮");
+        CommonOperate.单击(506.1, 1842, 3, 2, 5000, "点击视频页最底下中间那个按钮");
     }
 
-    public static void 领取任务页宝箱金币(String 任务宝箱位置) throws IOException, InterruptedException {
-        点击视频页最底下中间那个按钮打开任务页();
-        double[] 领取金币坐标 = {594.2f, 1737.2f};
-        if("中".equals(任务宝箱位置)){
-            领取金币坐标[0] = 594.2 + random.nextDouble() * 2;
-            领取金币坐标[1] = 1737.2 + random.nextDouble() * 2;
-        }else if("右".equals(任务宝箱位置)){
-            领取金币坐标[0] = 900 + random.nextDouble() * 20;
-            领取金币坐标[1] = 1700 + random.nextDouble() * 20;
-        }
-        CommonOperate.单击(领取金币坐标[0], 领取金币坐标[1], 2, 2,5000, "领取金币");
-
-        //领取宝箱金币后，弹出的页面还有一个看广告按钮
-        CommonOperate.单击(556, 1188, 2, 2, 3500, "领取宝箱金币后，弹出的页面还有一个看广告按钮");
-        CommonOperate.返回(2);
-        //返回后会有一个弹窗， 可能会有(也可能没有)一个 再去看看的选项，尝试点击一下，点不到也无所谓
-        CommonOperate.单击(476, 1613, 2, 2, 1500, "返回后会有一个弹窗， 可能会有(也可能没有)一个 再去看看的选项，尝试点击一下，点不到也无所谓");
-        CommonOperate.返回(2);
-        CommonOperate.返回(2);
-        System.out.println("目前应该回到视频页面了");
-    }
 
     public static void 上划(int 划动后最少停止时间, int offset) throws IOException, InterruptedException {
         CommonOperate.上划或者下划(划动后最少停止时间, offset, true);
@@ -97,9 +76,11 @@ public class DouYinOperate {
         }
     }
     public static void 赚钱任务页面划动到最底部() throws IOException, InterruptedException {
-        for(int i = 0; i < 8; i++){
-            上划(1, 1);
-        }
+//        for(int i = 0; i < 8; i++){
+//            上划(1, 1);
+//        }
+        CommonOperate.上划或者下划(6000, 8, 800, 800, 200, true);
+
     }
 
     public static void 打开抖音极速版(int userId) throws IOException, InterruptedException {

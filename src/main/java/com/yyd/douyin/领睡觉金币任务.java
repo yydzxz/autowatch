@@ -1,37 +1,27 @@
 package com.yyd.douyin;
 
-import com.yyd.CommonOperate;
-import com.yyd.DouYinOperate;
-import com.yyd.DouYinTask;
-import com.yyd.时间段;
+import com.yyd.*;
+import com.yyd.annotations.TaskAnnotation;
 
-import java.util.ArrayList;
-import java.util.List;
-
+@TaskAnnotation(cron = "", 优先级 = App.高优先级)
 public class 领睡觉金币任务 extends ITask{
+
     @Override
-    public String getCron() {
-        return null;
+    public boolean 任务满足开始条件() {
+        return true;
     }
 
     @Override
-    public List<时间段> 任务只在这几个时间段执行() {
-        List<时间段> list = new ArrayList<>();
-        list.add(new 时间段(5,0,0, 9,0 ,0));
-        list.add(new 时间段(11,0,0, 14, 0, 0));
-        list.add(new 时间段(17, 0, 0, 20, 0, 0));
-        list.add(new 时间段(21, 0, 0, 23, 59, 59));
-        return list;
+    public long 这个任务每次执行的最长时间() {
+        return -1;
     }
 
     @Override
-    public boolean getShouldStop() {
-        return false;
-    }
-
-    @Override
-    public void setShouldStop(boolean shouldStop) {
-
+    public void 初始化时间段() {
+        时间段列表.add(new 任务可以开始的时间段(5,0,0, 9,0 ,0));
+        时间段列表.add(new 任务可以开始的时间段(11,0,0, 14, 0, 0));
+        时间段列表.add(new 任务可以开始的时间段(17, 0, 0, 20, 0, 0));
+        时间段列表.add(new 任务可以开始的时间段(21, 0, 0, 23, 59, 59));
     }
 
     @Override
