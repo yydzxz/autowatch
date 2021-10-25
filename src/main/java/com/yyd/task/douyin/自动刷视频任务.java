@@ -18,12 +18,9 @@ public class 自动刷视频任务 extends ITask {
 
     static Logger log = LoggerFactory.getLogger(自动刷视频任务.class);
 
-    volatile boolean 自动刷视频任务是否应该停止;
 
     volatile int 打开评论的概率;
     volatile int 点赞的概率;
-
-    Long 上一次领取最底下中间宝藏的时间;
 
     //启动程序时，发现最底下中间那个宝藏已经有金币可以领取的话，这里就设置为true. 默认应该为false
     volatile boolean 强制领取宝藏金币;
@@ -34,8 +31,6 @@ public class 自动刷视频任务 extends ITask {
 
     public 自动刷视频任务(int 当前正在运行的userId) {
         super(当前正在运行的userId);
-        this.当前正在运行的userId = 当前正在运行的userId;
-        this.自动刷视频任务是否应该停止 = false;
         this.强制领取宝藏金币 = false;
         this.任务宝箱位置 = "右";
         this.打开评论的概率 = 25;

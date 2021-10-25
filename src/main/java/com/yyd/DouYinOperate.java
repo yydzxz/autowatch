@@ -89,8 +89,9 @@ public class DouYinOperate {
     }
 
     public static void 打开抖音极速版(int userId) throws IOException, InterruptedException {
+        log.info("打开抖音-" + userId);
         Runtime.getRuntime().exec("adb shell am start --user " + userId +  " com.ss.android.ugc.aweme.lite/com.ss.android.ugc.aweme.splash.SplashActivity");
-        TimeUnit.SECONDS.sleep(12);
+        TimeUnit.SECONDS.sleep(15);
     }
 
     public static void 退出抖音极速版(int userId) {

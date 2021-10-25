@@ -6,9 +6,12 @@ import com.yyd.任务可以开始的时间段;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
+
+import static com.yyd.util.MyDateUtil.毫秒转LocalDateTime;
 
 public abstract class ITask implements Runnable{
     static Logger log = LoggerFactory.getLogger(ITask.class);
@@ -29,18 +32,32 @@ public abstract class ITask implements Runnable{
      */
     public long 这个任务每次执行的最长时间;
 
+    public long 上次这个任务的开始时间;
     public long 这个任务的开始时间;
     public long 这个任务的结束时间;
 
     public volatile boolean  今天这个任务是否执行 = true;
 
-    public int 顺序 = 0;
+    public int 顺序 = 10;
+
+    public long 任务间隔时间毫秒 = -1;
 
     public ITask(int 当前正在运行的userId) {
         初始化时间段();
         this.当前正在运行的userId = 当前正在运行的userId;
         this.这个任务每次执行的最长时间 = 这个任务每次执行的最长时间();
         this.任务名 = this.getClass().getSimpleName() + "-" + 当前正在运行的userId;
+    }
+
+    public boolean 间隔时间是否满足(){
+        if(get上次这个任务的开始时间() == 0){
+            set上次这个任务的开始时间(System.currentTimeMillis());
+        }
+        boolean 是否满足 = System.currentTimeMillis() - get上次这个任务的开始时间() > 任务间隔时间毫秒;
+        if(!是否满足){
+            log.info("不满足任务开始条件, 这个任务的上次开始时间: {}", 毫秒转LocalDateTime(get上次这个任务的开始时间()).format(DateTimeFormatter.ISO_LOCAL_DATE_TIME));
+        }
+        return 是否满足;
     }
 
     public boolean 这个任务这次是否已经执行了足够时间(){
@@ -144,5 +161,13 @@ public abstract class ITask implements Runnable{
 
     public void set顺序(int 顺序) {
         this.顺序 = 顺序;
+    }
+
+    public long get上次这个任务的开始时间() {
+        return 上次这个任务的开始时间;
+    }
+
+    public void set上次这个任务的开始时间(long 上次这个任务的开始时间) {
+        this.上次这个任务的开始时间 = 上次这个任务的开始时间;
     }
 }

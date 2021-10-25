@@ -21,7 +21,6 @@ public class 搜索任务 extends ITask {
     public 搜索任务(int 当前正在运行的userId) {
         super(当前正在运行的userId);
         this.config = gson.fromJson(FileUtil.读取resources下的文件("/task/douyin/搜索任务.json"), Config.class);
-        //TODO 明天记得删除这里
         今天这个任务是否执行 = false;
     }
 
@@ -50,15 +49,16 @@ public class 搜索任务 extends ITask {
 
                 String 搜索词 = config.get用于搜索的列表().get(random.nextInt(config.get用于搜索的列表().size()));
                 Runtime.getRuntime().exec("adb shell input keyboard text " + 搜索词);
-                log.info("输入搜索词语" + 搜索词);
+                log.info("输入搜索词语:" + 搜索词);
                 TimeUnit.SECONDS.sleep(5);
 
                 CommonOperate.单击(config.get右小角搜索确认坐标x(), config.get右小角搜索确认坐标y(), 2, 2, 4, "点击右下角搜索确认");
-                CommonOperate.单击(400, 450, 50, 200, 4000, "随机选中一个搜索结果");
+                CommonOperate.单击(400, 350, 50, 200, 4000, "随机选中一个搜索结果");
+                CommonOperate.单击(400, 350, 50, 200, 4000, "随机选中一个搜索结果");
                 DouYinOperate.上划(15, 5);
             }
         }catch (Exception e){
-            e.printStackTrace();
+            log.error(e.getMessage(), e);
         }finally {
             DouYinOperate.退出抖音极速版(当前正在运行的userId);
         }

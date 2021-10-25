@@ -41,14 +41,6 @@ public class KuaiShouOperate {
         TimeUnit.SECONDS.sleep(25);
     }
 
-    public static void 领取任务页宝箱金币() throws IOException, InterruptedException {
-        进入任务中心();
-        CommonOperate.单击(881, 1750, 10, 10, 5000, "点击宝箱");
-        CommonOperate.单击(470, 1193, 200, 10, 35000, "看精彩视频赚更多");
-        CommonOperate.返回(2);
-        CommonOperate.返回(2);
-    }
-
     public static void 单击点赞(double 点赞x, double 点赞y) throws IOException, InterruptedException {
         CommonOperate.单击(962.1, 1118.3);
         //点赞后跟一个返回操作，防止点赞操作误入直播间

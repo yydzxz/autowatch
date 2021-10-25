@@ -23,7 +23,7 @@ public class FileUtil {
         }catch (IOException e){
             throw new RuntimeException(e);
         }
-        System.out.println(sb);
+//        System.out.println(sb);
         return sb.toString();
     }
 

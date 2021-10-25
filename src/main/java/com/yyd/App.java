@@ -31,10 +31,8 @@ public class App {
     public static final int 高优先级 = 1;
     public static List<ITask> 低优先级队列 = new ArrayList<>();
     public static List<ITask> 高优先级队列 = new ArrayList<>();
-    public static volatile ITask 当前正在执行的任务;
-    public static volatile ITask 上个任务;
-//    public static volatile LocalDateTime 上个任务的开始时间;
-//    public static LocalDateTime 上个任务的结束时间;
+//    public static volatile ITask 当前正在执行的任务;
+//    public static volatile ITask 上个任务;
 
     /**
      * 如果没有应用分身，那么用户id只有一个0
@@ -89,7 +87,7 @@ public class App {
                     }
                 }
                 try {
-                    TimeUnit.MINUTES.sleep(30);
+                    TimeUnit.MINUTES.sleep(1);
                 } catch (InterruptedException e) {
                     e.printStackTrace();
                 }
@@ -119,21 +117,26 @@ public class App {
             }
         }
         if(这次的任务可以开始的时间段 != null && (这次的任务可以开始的时间段.get该时间段最多可以执行几次() < 0 || 这次的任务可以开始的时间段.get该时间段已经执行过几次() < 这次的任务可以开始的时间段.get该时间段最多可以执行几次())){
-            当前正在执行的任务 = task;
+//            当前正在执行的任务 = task;
             if(!task.任务满足开始条件()){
-                log.info("现在任务【" + task.get任务名() + "】处于可开始时间段： " +这次的任务可以开始的时间段.当前时间段字符串() + ", 但是不满足开始条件");
+                log.info("现在任务【" + task.get任务名() + "】处于可开始时间段： " + 这次的任务可以开始的时间段.当前时间段字符串() + ", 但是不满足开始条件");
                 return;
             }
             if(!task.is今天这个任务是否执行()){
-                log.info("现在任务【" + task.get任务名() + "】处于可开始时间段： " +这次的任务可以开始的时间段.当前时间段字符串() + ", 但是今天不执行");
+                log.info("现在任务【" + task.get任务名() + "】处于可开始时间段： " + 这次的任务可以开始的时间段.当前时间段字符串() + ", 但是今天不执行");
+                return;
+            }
+            if(!task.间隔时间是否满足()){
+                log.info("现在任务【" + task.get任务名() + "】处于可开始时间段： " + 这次的任务可以开始的时间段.当前时间段字符串() + ", 但是还处于间隔时间内");
                 return;
             }
             task.set这个任务的开始时间(System.currentTimeMillis());
             log.info("现在任务【" + task.get任务名() + "】满足开始条件，并且处于可开始时间段： " +这次的任务可以开始的时间段.当前时间段字符串());
             task.doRun();
             这次的任务可以开始的时间段.当前时间段执行次数加1();
-            上个任务 = task;
+//            上个任务 = task;
             task.set这个任务的结束时间(System.currentTimeMillis());
+            task.set上次这个任务的开始时间(task.get这个任务的开始时间());
         }
     }
 

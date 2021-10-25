@@ -3,9 +3,12 @@ package com.yyd.task.douyin;
 import com.yyd.*;
 import com.yyd.annotations.TaskAnnotation;
 import com.yyd.task.ITask;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 @TaskAnnotation(cron = "", 优先级 = App.高优先级, 所属app = App.DOU_YIN)
 public class 领睡觉金币任务 extends ITask {
+    static Logger log = LoggerFactory.getLogger(领睡觉金币任务.class);
 
     public 领睡觉金币任务(int 当前正在运行的userId) {
         super(当前正在运行的userId);
@@ -36,7 +39,7 @@ public class 领睡觉金币任务 extends ITask {
             CommonOperate.单击(835, 650, 20, 5, 2500,"点击睡觉赚金币");
             CommonOperate.单击(400, 1760, 20, 10, 2500,"点击我睡觉了");
         }catch (Exception e){
-            throw new RuntimeException(e);
+            log.error(e.getMessage(), e);
         }finally {
             DouYinOperate.退出抖音极速版(当前正在运行的userId);
         }
