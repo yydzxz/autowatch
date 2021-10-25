@@ -10,6 +10,8 @@ import com.yyd.task.ITask;
 public class 看小说任务 extends ITask {
     public 看小说任务(int 当前正在运行的userId) {
         super(当前正在运行的userId);
+        //TODO 明天记得删除这里
+        今天这个任务是否执行 = false;
     }
 
     @Override

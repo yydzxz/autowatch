@@ -7,7 +7,7 @@ import java.util.concurrent.TimeUnit;
 import static com.yyd.KuaiShouOperate.单击点赞;
 
 public class KuaiShouTask {
-    public static int 当前正在运行的userId = 999;
+    public static int 当前正在运行的userId = 0;
 
     static Random random = new Random();
 
@@ -33,7 +33,7 @@ public class KuaiShouTask {
     public static void main(String[] args) throws IOException, InterruptedException {
 //        任务中心签到();
 //        任务中心最高5000金币悬赏();
-//        任务中心逛街领1000金币();
+        任务中心逛街领1000金币();
         自动刷视频();
     }
 
@@ -57,10 +57,10 @@ public class KuaiShouTask {
         KuaiShouOperate.进入任务中心();
 
         CommonOperate.上划或者下划(5000, 8, 800, 1900, 300, true );
-        CommonOperate.上划或者下划(755, 2, 800, 1900, 300, false );
+        CommonOperate.上划或者下划(1000, 3, 800, 1000, 300, false );
 
         for(int i = 0; i < 12; i++){
-            CommonOperate.单击(100, 260, 300, 20, 1500, "最高5000金币悬赏");
+            CommonOperate.单击(300, 300, 100, 50, 1500, "最高5000金币悬赏");
             TimeUnit.SECONDS.sleep(42);
             Runtime.getRuntime().exec("adb shell input keyevent 4");
             TimeUnit.SECONDS.sleep(3);

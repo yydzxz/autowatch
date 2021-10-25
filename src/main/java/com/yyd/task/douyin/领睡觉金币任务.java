@@ -23,8 +23,7 @@ public class 领睡觉金币任务 extends ITask {
 
     @Override
     public void 初始化时间段() {
-        时间段列表.add(new 任务可以开始的时间段(20,0,0, 23,59 ,59));
-
+        添加时间段(20,0,0, 23,59 ,59);
     }
 
     @Override

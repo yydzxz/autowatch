@@ -10,6 +10,7 @@ import org.slf4j.LoggerFactory;
 import java.time.LocalDateTime;
 import java.time.ZoneOffset;
 import java.time.format.DateTimeFormatter;
+import java.util.concurrent.TimeUnit;
 
 /**
  * Unit test for simple App.
@@ -20,11 +21,11 @@ public class AppTest
      * Rigorous Test :-)
      */
     @Test
-    public void shouldAnswerWithTrue()
-    {
+    public void shouldAnswerWithTrue() throws InterruptedException {
 
-        Logger log = LoggerFactory.getLogger(AppTest.class);
-        log.info("dfs");
+        LocalDateTime begin = LocalDateTime.now();
+        TimeUnit.SECONDS.sleep(2);
+        System.out.println(LocalDateTime.now().minusSeconds(5).compareTo(begin));
 
     }
 }

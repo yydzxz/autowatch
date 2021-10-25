@@ -7,33 +7,40 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.time.LocalDate;
-import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
 import java.util.Scanner;
 import java.util.concurrent.TimeUnit;
 
+/**
+ * TODO 每天会弹一个青少年模式
+ */
 public class App {
     static Logger log = LoggerFactory.getLogger(App.class);
 
     public static final String DOU_YIN = "douyin";
     public static final String KUAI_SHOU = "kuaishou";
 
+    public static final int 主用户id = 0;
+    public static final int 分身用户id = 999;
+
+
 
     public static final int 低优先级 = 0;
     public static final int 高优先级 = 1;
     public static List<ITask> 低优先级队列 = new ArrayList<>();
     public static List<ITask> 高优先级队列 = new ArrayList<>();
-    public static volatile long 当前任务的开始时间;
     public static volatile ITask 当前正在执行的任务;
-    public static LocalDateTime 执行队列中上一个任务的结束时间;
+    public static volatile ITask 上个任务;
+//    public static volatile LocalDateTime 上个任务的开始时间;
+//    public static LocalDateTime 上个任务的结束时间;
 
     /**
      * 如果没有应用分身，那么用户id只有一个0
      * 如果开启了应用分身，那么分身应用对应的用户id根据手机不同而不同，小米是999
      */
-    public static int[] 用户id列表 = new int[]{0, 999};
+    public static int[] 用户id列表 = new int[]{主用户id, 分身用户id};
 
     static{
         init();
@@ -80,7 +87,6 @@ public class App {
                     for (ITask task : 低优先级队列){
                         task.第二天初始化();
                     }
-                    log.info("第二天到了，任务已经执行次数清零");
                 }
                 try {
                     TimeUnit.MINUTES.sleep(30);
@@ -113,6 +119,7 @@ public class App {
             }
         }
         if(这次的任务可以开始的时间段 != null && (这次的任务可以开始的时间段.get该时间段最多可以执行几次() < 0 || 这次的任务可以开始的时间段.get该时间段已经执行过几次() < 这次的任务可以开始的时间段.get该时间段最多可以执行几次())){
+            当前正在执行的任务 = task;
             if(!task.任务满足开始条件()){
                 log.info("现在任务【" + task.get任务名() + "】处于可开始时间段： " +这次的任务可以开始的时间段.当前时间段字符串() + ", 但是不满足开始条件");
                 return;
@@ -120,14 +127,13 @@ public class App {
             if(!task.is今天这个任务是否执行()){
                 log.info("现在任务【" + task.get任务名() + "】处于可开始时间段： " +这次的任务可以开始的时间段.当前时间段字符串() + ", 但是今天不执行");
                 return;
-
             }
-            当前正在执行的任务 = task;
-            当前任务的开始时间 = System.currentTimeMillis();
+            task.set这个任务的开始时间(System.currentTimeMillis());
             log.info("现在任务【" + task.get任务名() + "】满足开始条件，并且处于可开始时间段： " +这次的任务可以开始的时间段.当前时间段字符串());
             task.doRun();
             这次的任务可以开始的时间段.当前时间段执行次数加1();
-            执行队列中上一个任务的结束时间 = LocalDateTime.now();
+            上个任务 = task;
+            task.set这个任务的结束时间(System.currentTimeMillis());
         }
     }
 

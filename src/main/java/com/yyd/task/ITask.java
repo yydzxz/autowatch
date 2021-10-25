@@ -29,11 +29,8 @@ public abstract class ITask implements Runnable{
      */
     public long 这个任务每次执行的最长时间;
 
-    // 之所以取名“这次这个任务的开始时间” 和 “上次这个任务的结束时间”，
-    // 是因为任务开始执行后，就是当前任务的执行过程中，属于这次任务
-    // 而一旦任务执行完后，这次这个任务就完成了，在时间上属于上次的任务了
-    public long 这次这个任务的开始时间;
-    public long 上次这个任务的结束时间;
+    public long 这个任务的开始时间;
+    public long 这个任务的结束时间;
 
     public volatile boolean  今天这个任务是否执行 = true;
 
@@ -50,7 +47,7 @@ public abstract class ITask implements Runnable{
         if(这个任务每次执行的最长时间 < 0){
             return false;
         }else {
-            return System.currentTimeMillis() - 这次这个任务的开始时间 > 这个任务每次执行的最长时间;
+            return System.currentTimeMillis() - 这个任务的开始时间 > 这个任务每次执行的最长时间;
         }
     }
 
@@ -72,10 +69,10 @@ public abstract class ITask implements Runnable{
 
     public void doRun(){
         try {
-            这次这个任务的开始时间 = System.currentTimeMillis();
+            这个任务的开始时间 = System.currentTimeMillis();
             log.info("[" + get任务名() + "] 开始执行了");
             run();
-            上次这个任务的结束时间 = System.currentTimeMillis();
+            这个任务的结束时间 = System.currentTimeMillis();
             log.info("[" + get任务名() + "] 结束执行了");
         }catch (Exception e){
             log.info(e.getMessage());
@@ -114,7 +111,25 @@ public abstract class ITask implements Runnable{
         for (任务可以开始的时间段 任务可以开始的时间段 : 任务可执行时间段列表){
             任务可以开始的时间段.执行次数清零();
         }
+        log.info("{}下所有时间段的执行次数已被清零", this.get任务名());
         set今天这个任务是否执行(true);
+    }
+
+
+    public long get这个任务的开始时间() {
+        return 这个任务的开始时间;
+    }
+
+    public void set这个任务的开始时间(long 这个任务的开始时间) {
+        this.这个任务的开始时间 = 这个任务的开始时间;
+    }
+
+    public long get这个任务的结束时间() {
+        return 这个任务的结束时间;
+    }
+
+    public void set这个任务的结束时间(long 这个任务的结束时间) {
+        this.这个任务的结束时间 = 这个任务的结束时间;
     }
 
     public abstract boolean 任务满足开始条件();

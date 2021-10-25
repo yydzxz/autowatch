@@ -37,13 +37,13 @@ public class 搜索任务 extends ITask {
 
     @Override
     public void 初始化时间段() {
-        添加时间段(0, 0,0,23,59 ,59, 3);
+        添加时间段(0, 0,0,23,59 ,59, 1);
     }
 
     @Override
     public void run() {
         try {
-            for (int i = 0; i < 3; i++){
+            for (int i = 0; i < config.get搜索次数(); i++){
                 CommonOperate.退出所有App();
                 DouYinOperate.打开抖音极速版(当前正在运行的userId);
                 CommonOperate.单击(config.get放大镜坐标x(), config.get放大镜坐标y(), 2, 10, 3000, "点击放大镜标志的搜索按钮");

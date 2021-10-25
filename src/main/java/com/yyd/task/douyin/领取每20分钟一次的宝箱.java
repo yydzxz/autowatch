@@ -5,13 +5,20 @@ import com.yyd.CommonOperate;
 import com.yyd.DouYinOperate;
 import com.yyd.annotations.TaskAnnotation;
 import com.yyd.task.ITask;
-import com.yyd.任务可以开始的时间段;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.io.IOException;
 import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
+import java.util.Date;
+
+import static com.yyd.util.MyDateUtil.毫秒转LocalDateTime;
 
 @TaskAnnotation(cron = "", 优先级 = App.高优先级, 所属app = App.DOU_YIN)
 public class 领取每20分钟一次的宝箱 extends ITask {
+    static Logger log = LoggerFactory.getLogger(领取每20分钟一次的宝箱.class);
+
     private String 任务宝箱位置 = "右";
 
     public 领取每20分钟一次的宝箱(int 当前正在运行的userId) {
@@ -20,7 +27,15 @@ public class 领取每20分钟一次的宝箱 extends ITask {
 
     @Override
     public boolean 任务满足开始条件() {
-        return App.执行队列中上一个任务的结束时间 != null && LocalDateTime.now().minusMinutes(21).compareTo(App.执行队列中上一个任务的结束时间) > 0;
+        boolean 是否满足 = App.上个任务 != null && System.currentTimeMillis() - App.上个任务.get这个任务的开始时间() > 20 * 60 * 1000;
+        if(!是否满足){
+            if(App.上个任务 == null){
+                log.info("领取每20分钟一次的宝箱的开始条件不满足");
+            }else {
+                log.info("执行队列中上一个任务的开始时间: {}", 毫秒转LocalDateTime(App.上个任务.get这个任务的开始时间()).format(DateTimeFormatter.ISO_LOCAL_DATE_TIME));
+            }
+        }
+        return 是否满足;
     }
 
     @Override
@@ -30,7 +45,7 @@ public class 领取每20分钟一次的宝箱 extends ITask {
 
     @Override
     public void 初始化时间段() {
-        时间段列表.add(new 任务可以开始的时间段(0,0,0, 23,59 ,59, -1));
+        添加时间段(0,0,0, 23,59 ,59, -1);
     }
 
     @Override

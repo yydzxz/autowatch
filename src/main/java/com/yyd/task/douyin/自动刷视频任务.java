@@ -39,7 +39,11 @@ public class 自动刷视频任务 extends ITask {
         this.强制领取宝藏金币 = false;
         this.任务宝箱位置 = "右";
         this.打开评论的概率 = 25;
-        this.点赞的概率 = 0;
+        if(当前正在运行的userId == App.主用户id){
+            this.点赞的概率 = 5;
+        }else {
+            this.点赞的概率 = 0;
+        }
     }
 
     @Override
